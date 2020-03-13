@@ -1,0 +1,16 @@
+[urls]
+spigot_version_link = "https://hub.spigotmc.org/versions/"
+git_installer_link = "https://static.spigotmc.org/git/PortableGit-{0}-{1}-bit.7z.exe"
+maven_installer_link = "https://static.spigotmc.org/maven/apache-maven-{0}-bin.zip"
+stash_repo_link = "https://hub.spigotmc.org/stash/scm/spigot/"
+mc_version_manifest_link = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+
+[versions]
+spigot = "1.15.2"
+maven = "3.5.0"
+portal_git = "2.15.0"
+
+
+output_directories = [
+    "$working_dir/output"
+]

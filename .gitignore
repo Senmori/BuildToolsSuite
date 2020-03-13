@@ -7,6 +7,7 @@
 
 # Sensitive or high-churn files:
 .idea/
+.gradle/
 
 # CMake
 cmake-build-debug/
