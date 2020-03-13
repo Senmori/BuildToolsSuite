@@ -15,7 +15,7 @@ public class ConfigurationFileAsset extends FileAsset {
         return sourceFileAsset;
     }
 
-    public File getConfigurationFile() {
-
+    public File getSourceFile() {
+        return getSourceFileAsset().getFile();
     }
 }
