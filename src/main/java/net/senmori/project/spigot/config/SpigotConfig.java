@@ -1,36 +1,38 @@
 package net.senmori.project.spigot.config;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
-import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileNotFoundAction;
 import com.electronwill.nightconfig.core.io.ConfigParser;
 import com.electronwill.nightconfig.core.io.ConfigWriter;
 import com.electronwill.nightconfig.core.io.ParsingMode;
-import com.electronwill.nightconfig.toml.TomlFormat;
-import com.electronwill.nightconfig.toml.TomlParser;
-import com.electronwill.nightconfig.toml.TomlWriter;
-import java.io.File;
+import net.senmori.project.asset.assets.ConfigurationFileAsset;
+import net.senmori.project.config.ConfigurationOptions;
 
 public class SpigotConfig {
 
-    private final CommentedConfig config = TomlFormat.newConcurrentConfig();
-    private final ConfigWriter writer;
-    private final ConfigParser<? super CommentedConfig> parser;
+    private final ConfigurationOptions<CommentedConfig> configOptions;
 
-    private final File configFile;
+    private final ConfigurationFileAsset configurationFileAsset;
 
-    public SpigotConfig(File configFile, ConfigParser<? super CommentedConfig> parser, ConfigWriter configWriter) {
-        this.configFile = configFile;
-        parser.parse(configFile, this.config, ParsingMode.REPLACE, FileNotFoundAction.CREATE_EMPTY);
-        this.writer = configWriter;
-        this.parser = parser;
-    }
-
-    public SpigotConfig(File configFile) {
-        this(configFile, new TomlParser(), new TomlWriter());
+    protected SpigotConfig(ConfigurationFileAsset configFileAsset, ConfigurationOptions<CommentedConfig> configuration, FileNotFoundAction action) {
+        this.configurationFileAsset = configFileAsset;
+        this.configOptions = configuration;
+        configOptions.getParser().parse(configFileAsset.getFile(), configOptions.getConfig(), ParsingMode.REPLACE, action);
     }
 
     public CommentedConfig getConfig() {
-        return config;
+        return configOptions.getConfig();
+    }
+
+    public ConfigWriter getWriter() {
+        return configOptions.getWriter();
+    }
+
+    public ConfigParser<CommentedConfig> getParser() {
+        return configOptions.getParser();
+    }
+
+    public ConfigurationFileAsset getConfigurationFileAsset() {
+        return configurationFileAsset;
     }
 }
