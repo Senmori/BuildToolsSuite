@@ -31,8 +31,4 @@ public class ProjectConfig<K> extends ConfigWrapper<Config> {
         String versionString = getString(path);
         return new ComparableVersion(versionString);
     }
-
-    public List<String> getList(String path) {
-        return config.get(path);
-    }
 }

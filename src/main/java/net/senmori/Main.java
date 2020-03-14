@@ -3,6 +3,8 @@ package net.senmori;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +20,7 @@ import net.senmori.project.ApplicationDetails;
 import net.senmori.project.minecraft.MinecraftProject;
 import net.senmori.project.spigot.SpigotProject;
 import net.senmori.storage.Directory;
+import net.senmori.versioning.ComparableVersion;
 
 public class Main extends Application {
     public static final Directory WORKING_DIR = new Directory(System.getProperty("user.dir"), "BTSuite");
@@ -67,6 +70,23 @@ public class Main extends Application {
         stage.show();
         stage.setMinWidth(scene.getWidth());
         stage.setMinHeight(scene.getHeight());
+
+        String spigotVersion = spigotProject.getConfig().get("urls.spigot_version");
+        String gitInstall = spigotProject.getConfig().get("urls.git_installer");
+        String mvnInstall = spigotProject.getConfig().get("urls.maven_installer");
+        String mcVersion = spigotProject.getConfig().get("urls.mc_version_manifest");
+        print(textArea, spigotVersion);
+        print(textArea, gitInstall);
+        print(textArea, mvnInstall);
+        print(textArea, mcVersion);
+
+        ComparableVersion spigotVersionNumber = spigotProject.getConfig().getVersion("versions.spigot");
+        ComparableVersion mavenVersionNumber = spigotProject.getConfig().getVersion("versions.maven");
+        print(textArea,"Spigot Version: " + spigotVersionNumber.toString() + " - Maven Version: " + mavenVersionNumber.toString());
+    }
+
+    private static void print(TextArea console, String text) {
+        Platform.runLater(() -> console.appendText(text + "\n"));
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
