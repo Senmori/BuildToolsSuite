@@ -8,6 +8,7 @@ import com.electronwill.nightconfig.core.io.ConfigWriter;
 import com.electronwill.nightconfig.toml.TomlFormat;
 import com.electronwill.nightconfig.toml.TomlParser;
 import com.electronwill.nightconfig.toml.TomlWriter;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
@@ -105,12 +106,8 @@ public final class SpigotConfigBuilder {
      */
     public SpigotConfigBuilder copySourceFileOnLoad() {
         Objects.requireNonNull(jarFileAsset, () -> "Cannot copy jar file asset without a jar file");
-        try {
-            URL assetURL = jarFileAsset.getAssetLocation().toURL();
-            this.fileNotFoundAction = FileNotFoundAction.copyData(assetURL);
-        } catch ( MalformedURLException e ) {
-            e.printStackTrace();
-        }
+        File sourceFile = jarFileAsset.getFile();
+        this.fileNotFoundAction = FileNotFoundAction.copyData(sourceFile);
         return this;
     }
 
