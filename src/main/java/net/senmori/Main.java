@@ -1,8 +1,6 @@
 package net.senmori;
 
-import com.electronwill.nightconfig.toml.TomlFormat;
-import com.electronwill.nightconfig.toml.TomlParser;
-import com.electronwill.nightconfig.toml.TomlWriter;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
@@ -16,33 +14,26 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import net.senmori.project.asset.assets.JarFileAsset;
-import net.senmori.project.asset.assets.LocalFileAsset;
+import net.senmori.project.ApplicationDetails;
+import net.senmori.project.spigot.SpigotProject;
 import net.senmori.project.spigot.config.SpigotConfig;
-import net.senmori.project.config.ConfigBuilder;
 import net.senmori.storage.Directory;
+import net.senmori.util.FileUtil;
 
 public class Main extends Application {
     public static final Directory WORKING_DIR = new Directory(System.getProperty("user.dir"), "BTSuite");
-    public static final Directory SETTINGS_FILE = new Directory(WORKING_DIR, "spigot_settings.toml");
     private static Scene scene;
 
     private static AnchorPane rootPane;
-    private static SpigotConfig config = null;
+    private static SpigotProject spigotProject;
+    private static ApplicationDetails applicationDetails;
 
     @Override
     public void init() throws Exception {
         WORKING_DIR.getFile().mkdirs();
-        File localFile = SETTINGS_FILE.getFile();
-        LocalFileAsset localFileAsset = LocalFileAsset.of(localFile);
-        JarFileAsset jarFileAsset = JarFileAsset.of("spigot_settings.toml");
-        config = ConfigBuilder.builder(localFileAsset)
-                              .sourceFile(jarFileAsset)
-                              .config(TomlFormat.newConcurrentConfig())
-                              .parser(new TomlParser())
-                              .writer(new TomlWriter())
-                              .copySourceFileOnLoad()
-                              .build();
+        applicationDetails = new ApplicationDetails(this);
+        spigotProject = new SpigotProject();
+        spigotProject.initSettings(applicationDetails);
     }
 
     @Override
@@ -75,7 +66,14 @@ public class Main extends Application {
         stage.setMinWidth(scene.getWidth());
         stage.setMinHeight(scene.getHeight());
 
-        Platform.runLater(() -> textArea.setText(config.getConfig().toString()));
+
+        File workingDirectory = applicationDetails.getWorkingDirectory().getFile();
+        printToConsole(textArea, workingDirectory.getAbsolutePath());
+        Desktop.getDesktop().open(workingDirectory);
+    }
+
+    private static void printToConsole(TextArea console, String text) {
+        Platform.runLater(() -> console.appendText(text + System.lineSeparator()));
     }
 
     private static Parent loadFXML(String fxml) throws IOException {

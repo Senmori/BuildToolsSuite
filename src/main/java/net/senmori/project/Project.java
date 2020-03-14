@@ -1,5 +1,7 @@
 package net.senmori.project;
 
+import net.senmori.storage.Directory;
+
 /**
  * Represents a system that can be interacted with in order to
  * build a given product.
@@ -17,9 +19,33 @@ public interface Project {
     String getName();
 
     /**
+     * Get the {@link ClassLoader} that will be used to load project specifc
+     * files without having to specify the direct path names.
      *
-     *
-     * @return
+     * @return the classloader
      */
-    Result loadSettings();
+    ClassLoader getProjectClassLoader();
+
+    Directory getWorkingDirectory();
+
+    /**
+     * Initialize project settings.
+     *
+     * @return the appropriate {@link Result}
+     */
+    Result initSettings(ApplicationDetails rootProject);
+
+    /**
+     * Initialize the javafx scenes, stages, and components
+     *
+     * @return the appropriate {@link Result}
+     */
+    Result initStage(ApplicationDetails rootProject);
+
+    /**
+     * Populate the scenes with the appropriate information
+     *
+     * @return the appropriate {@link Result}
+     */
+    Result populateView(ApplicationDetails rootProject);
 }

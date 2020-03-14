@@ -73,7 +73,7 @@ public class SettingsFactory {
     }
 
     public static File saveSettings(BuildToolsSettings settings) {
-        File settingsFile = new File(System.getProperty("user.dir"), "/net/senmori/spigot_settings.toml");
+        File settingsFile = new File(System.getProperty("user.dir"), "/net/senmori/project/spigot/spigot_settings.toml");
         try ( Writer writer = new FileWriter( settingsFile ) ) {
             GSON.toJson( settings, writer );
         } catch ( IOException e ) {
