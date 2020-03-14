@@ -4,7 +4,9 @@ import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.io.ParsingMode;
 import com.electronwill.nightconfig.core.utils.ConfigWrapper;
 import java.io.File;
+import java.util.List;
 import lombok.NonNull;
+import net.senmori.versioning.ComparableVersion;
 
 public class ProjectConfig<K> extends ConfigWrapper<Config> {
 
@@ -17,4 +19,20 @@ public class ProjectConfig<K> extends ConfigWrapper<Config> {
         options.getParser().parse(configFile, config, ParsingMode.REPLACE, options.getFileNotFoundAction());
     }
 
+    public String getString(String path) {
+        return config.get(path);
+    }
+
+    public int getInt(String path) {
+        return config.getInt(path);
+    }
+
+    public ComparableVersion getVersion(String path) {
+        String versionString = getString(path);
+        return new ComparableVersion(versionString);
+    }
+
+    public List<String> getList(String path) {
+        return config.get(path);
+    }
 }
