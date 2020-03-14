@@ -13,7 +13,11 @@ public class ConfigurationOptions<T extends ProjectConfig> {
     private final ConfigurationFileAsset file;
     private final FileNotFoundAction fileNotFoundAction;
 
-    public ConfigurationOptions(ConfigWriter writer, ConfigParser<? extends Config> parser, ConfigurationFileAsset file, FileNotFoundAction fileNotFoundAction) {
+    private ConfigurationOptions() {
+        throw new UnsupportedOperationException("Cannot instantiate ConfigurationOptions with an empty constructor");
+    }
+
+    protected ConfigurationOptions(ConfigWriter writer, ConfigParser<? extends Config> parser, ConfigurationFileAsset file, FileNotFoundAction fileNotFoundAction) {
         this.writer = writer;
         this.parser = parser;
         this.file = file;
