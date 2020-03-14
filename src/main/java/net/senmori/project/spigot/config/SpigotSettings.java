@@ -1,23 +1,19 @@
 package net.senmori.project.spigot.config;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
-import com.electronwill.nightconfig.core.conversion.Conversion;
-import com.electronwill.nightconfig.core.conversion.Path;
-import com.electronwill.nightconfig.core.conversion.SpecValidator;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
-import net.senmori.jfx.ComparableVersionConverter;
-import net.senmori.project.config.DefaultProjectConfiguration;
+import net.senmori.project.config.ProjectConfig;
 import net.senmori.versioning.ComparableVersion;
 
 @Getter
 public class SpigotSettings {
 
     @Getter(AccessLevel.NONE)
-    private final DefaultProjectConfiguration projectConfiguration;
+    private final ProjectConfig projectConfiguration;
 
     private String spigotVersionsURL = "https://hub.spigotmc.org/versions/";
     private String gitInstallerLink = "https://static.spigotmc.org/git/PortableGit-{0}-{1}-bit.7z.exe";
@@ -31,12 +27,8 @@ public class SpigotSettings {
 
     private List<String> outputDirectories = new ArrayList<>();
 
-    public SpigotSettings(@NonNull DefaultProjectConfiguration config) {
+    public SpigotSettings(@NonNull ProjectConfig config) {
         this.projectConfiguration = config;
-    }
-
-    public CommentedConfig getConfig() {
-        return projectConfiguration.getConfig();
     }
 
     public void setSpigotVersion(@NonNull ComparableVersion version) {
