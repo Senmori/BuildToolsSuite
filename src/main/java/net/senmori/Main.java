@@ -67,15 +67,6 @@ public class Main extends Application {
         stage.show();
         stage.setMinWidth(scene.getWidth());
         stage.setMinHeight(scene.getHeight());
-
-
-        File workingDirectory = applicationDetails.getWorkingDirectory().getFile();
-        printToConsole(textArea, workingDirectory.getAbsolutePath());
-        Desktop.getDesktop().open(workingDirectory);
-    }
-
-    private static void printToConsole(TextArea console, String text) {
-        Platform.runLater(() -> console.appendText(text + System.lineSeparator()));
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
