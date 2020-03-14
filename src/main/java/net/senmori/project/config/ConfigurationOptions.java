@@ -6,7 +6,7 @@ import com.electronwill.nightconfig.core.io.ConfigParser;
 import com.electronwill.nightconfig.core.io.ConfigWriter;
 import net.senmori.project.asset.assets.ConfigurationFileAsset;
 
-public class ConfigurationOptions<T extends ProjectConfig> {
+public class ConfigurationOptions {
 
     private final ConfigWriter writer;
     private final ConfigParser<? extends Config> parser;

@@ -1,6 +1,7 @@
 package net.senmori.project.config;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileNotFoundAction;
 import com.electronwill.nightconfig.core.io.ConfigParser;
 import com.electronwill.nightconfig.core.io.ConfigWriter;
@@ -27,9 +28,9 @@ import net.senmori.project.asset.assets.LocalFileAsset;
  */
 public final class ConfigBuilder {
 
-    private CommentedConfig config = TomlFormat.newConcurrentConfig();
+    private Config config = TomlFormat.newConcurrentConfig();
     private ConfigWriter configWriter = new TomlWriter();
-    private ConfigParser<CommentedConfig> configParser = new TomlParser();
+    private ConfigParser<? extends Config> configParser = new TomlParser();
     private FileNotFoundAction fileNotFoundAction = FileNotFoundAction.CREATE_EMPTY;
     private LocalFileAsset localFileAsset = null;
     private JarFileAsset jarFileAsset = null;
@@ -62,12 +63,12 @@ public final class ConfigBuilder {
     }
 
     /**
-     * Set the type of {@link CommentedConfig} for the {@link ProjectConfig}
+     * Set the type of {@link Config} for the {@link ProjectConfig}
      *
      * @param config the type of config
      * @return this
      */
-    public ConfigBuilder config(CommentedConfig config) {
+    public <T extends Config> ConfigBuilder config(T config) {
         this.config = config;
         return this;
     }
@@ -89,7 +90,7 @@ public final class ConfigBuilder {
      * @param parser the parser to use
      * @return this
      */
-    public ConfigBuilder parser(ConfigParser<CommentedConfig> parser) {
+    public <T extends Config> ConfigBuilder parser(ConfigParser<T> parser) {
         this.configParser = parser;
         return this;
     }
@@ -122,9 +123,9 @@ public final class ConfigBuilder {
     /**
      * @return a new {@link ProjectConfig}
      */
-    public ProjectConfig build() {
+    public <T extends Config> ProjectConfig<T> build() {
         ConfigurationFileAsset asset = new ConfigurationFileAsset(localFileAsset, jarFileAsset);
-        ConfigurationOptions<ProjectConfig> options = new ConfigurationOptions<>(configWriter, configParser, asset, fileNotFoundAction);
-        return new ProjectConfig(config, options);
+        ConfigurationOptions options = new ConfigurationOptions(configWriter, configParser, asset, fileNotFoundAction);
+        return new ProjectConfig<T>(config, options);
     }
 }

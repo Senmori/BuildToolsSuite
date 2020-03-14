@@ -1,15 +1,16 @@
 package net.senmori.project.config;
 
-import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.io.ParsingMode;
-import com.electronwill.nightconfig.core.utils.CommentedConfigWrapper;
+import com.electronwill.nightconfig.core.utils.ConfigWrapper;
 import java.io.File;
 import lombok.NonNull;
 
-public class ProjectConfig extends CommentedConfigWrapper<CommentedConfig> {
+public class ProjectConfig<K> extends ConfigWrapper<Config> {
 
-    private final ConfigurationOptions<ProjectConfig> options;
-    protected ProjectConfig(@NonNull CommentedConfig config, ConfigurationOptions<ProjectConfig> options) {
+    private final ConfigurationOptions options;
+
+    protected ProjectConfig(Config config, @NonNull ConfigurationOptions options) {
         super(config);
         this.options = options;
         File configFile = options.getFileAsset().getFile();
