@@ -1,4 +1,4 @@
-package net.senmori.project.spigot;
+package net.senmori.project.minecraft;
 
 import net.senmori.project.ApplicationDetails;
 import net.senmori.project.Project;
@@ -9,18 +9,18 @@ import net.senmori.project.config.ConfigBuilder;
 import net.senmori.project.config.DefaultProjectConfiguration;
 import net.senmori.storage.Directory;
 
-public class SpigotProject implements Project {
+public class MinecraftProject implements Project {
 
     private LocalFileAsset configFileAsset;
     private JarFileAsset sourceFileAsset;
     private Directory workingDirectory;
     private DefaultProjectConfiguration config;
 
-    public SpigotProject() {}
+    public MinecraftProject() {}
 
     @Override
     public String getName() {
-        return "Spigot";
+        return "Minecraft";
     }
 
     @Override
@@ -35,10 +35,10 @@ public class SpigotProject implements Project {
 
     @Override
     public Result initSettings(ApplicationDetails rootProject) {
-        workingDirectory = new Directory(rootProject.getWorkingDirectory(), "Spigot");
+        workingDirectory = new Directory(rootProject.getWorkingDirectory(), "Minecraft");
         workingDirectory.getFile().mkdirs();
-        configFileAsset = LocalFileAsset.of(this, "spigot_settings.toml");
-        sourceFileAsset = JarFileAsset.of(this, "spigot_settings.toml");
+        configFileAsset = LocalFileAsset.of(this, "mc_settings.toml");
+        sourceFileAsset = JarFileAsset.of(this, "mc_settings.toml");
         config = ConfigBuilder.builder(configFileAsset)
                               .sourceFile(sourceFileAsset)
                               .copySourceFileOnLoad()
@@ -54,9 +54,5 @@ public class SpigotProject implements Project {
     @Override
     public Result populateView(ApplicationDetails rootProject) {
         return Result.SUCCESS;
-    }
-
-    public DefaultProjectConfiguration getConfig() {
-        return config;
     }
 }

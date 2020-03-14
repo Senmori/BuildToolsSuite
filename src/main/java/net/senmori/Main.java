@@ -15,10 +15,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.senmori.project.ApplicationDetails;
+import net.senmori.project.minecraft.MinecraftProject;
 import net.senmori.project.spigot.SpigotProject;
-import net.senmori.project.spigot.config.SpigotConfig;
 import net.senmori.storage.Directory;
-import net.senmori.util.FileUtil;
 
 public class Main extends Application {
     public static final Directory WORKING_DIR = new Directory(System.getProperty("user.dir"), "BTSuite");
@@ -26,6 +25,7 @@ public class Main extends Application {
 
     private static AnchorPane rootPane;
     private static SpigotProject spigotProject;
+    private static MinecraftProject mcProject;
     private static ApplicationDetails applicationDetails;
 
     @Override
@@ -34,6 +34,8 @@ public class Main extends Application {
         applicationDetails = new ApplicationDetails(this);
         spigotProject = new SpigotProject();
         spigotProject.initSettings(applicationDetails);
+        mcProject = new MinecraftProject();
+        mcProject.initSettings(applicationDetails);
     }
 
     @Override

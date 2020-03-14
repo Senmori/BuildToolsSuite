@@ -12,7 +12,6 @@ import java.util.Objects;
 import net.senmori.project.asset.assets.ConfigurationFileAsset;
 import net.senmori.project.asset.assets.JarFileAsset;
 import net.senmori.project.asset.assets.LocalFileAsset;
-import net.senmori.project.spigot.config.SpigotConfig;
 
 /**
  * The default config builder. <br>
@@ -37,7 +36,7 @@ public final class ConfigBuilder {
 
     /**
      * Get a new instance of a {@link ConfigBuilder} to configure
-     * a {@link SpigotConfig}
+     * a {@link DefaultProjectConfiguration}
      *
      * @param existingConfigFile the existing config file on disk
      * @return a new {@link ConfigBuilder}
@@ -63,7 +62,7 @@ public final class ConfigBuilder {
     }
 
     /**
-     * Set the type of {@link CommentedConfig} for the {@link SpigotConfig}
+     * Set the type of {@link CommentedConfig} for the {@link DefaultProjectConfiguration}
      *
      * @param config the type of config
      * @return this
@@ -74,7 +73,7 @@ public final class ConfigBuilder {
     }
 
     /**
-     * Set the type {@link ConfigWriter} for the {@link SpigotConfig}
+     * Set the type {@link ConfigWriter} for the {@link DefaultProjectConfiguration}
      *
      * @param writer the writer to use
      * @return this
@@ -85,7 +84,7 @@ public final class ConfigBuilder {
     }
 
     /**
-     * Set the {@link ConfigParser} for the {@link SpigotConfig}
+     * Set the {@link ConfigParser} for the {@link DefaultProjectConfiguration}
      *
      * @param parser the parser to use
      * @return this
@@ -121,11 +120,11 @@ public final class ConfigBuilder {
     }
 
     /**
-     * @return a new {@link SpigotConfig} that has not been populated with value
+     * @return a new {@link DefaultProjectConfiguration} that has not been populated with value
      */
-    public SpigotConfig build() {
+    public DefaultProjectConfiguration build() {
         ConfigurationOptions<CommentedConfig> options = new ConfigurationOptions<>(config, configWriter, configParser);
         ConfigurationFileAsset asset = new ConfigurationFileAsset(localFileAsset, jarFileAsset);
-        return new SpigotConfig(asset, options, fileNotFoundAction);
+        return new DefaultProjectConfiguration(asset, options, fileNotFoundAction);
     }
 }
