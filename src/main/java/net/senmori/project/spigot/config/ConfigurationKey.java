@@ -55,22 +55,12 @@ public interface ConfigurationKey {
          * *********************************
          */
 
-        public static final String PORTABLE_GIT_VERSION = "portable_git_version";
+        public static final String PORTABLE_GIT_VERSION = "versions.portable_git";
 
-        public static final String DEFAULT_SPIGOT_VERSION = "default_spigot_version";
+        public static final String DEFAULT_SPIGOT_VERSION = "versions.spigot";
 
-        public static final String MAVEN_VERSION = "maven_version";
+        public static final String MAVEN_VERSION = "versions.maven";
 
         public static final String PORTABLE_GIT_DIR = "portable_git_dir";
-    }
-
-    final class Value {
-        /* *********************************
-         *    DEFAULT UN-FORMATTED LINKS
-         * *********************************
-         */
-        public static final String DEFAULT_MAVEN_INSTALLER_LINK = "https://static.spigotmc.org/maven/apache-maven-{0}-bin.zip";
-
-        public static final String DEFAULT_S3_DOWNLOAD_LINK = "https://s3.amazonaws.com/Minecraft.Download/versions/%1$s/minecraft_server.%1$s.jar";
     }
 }

@@ -41,7 +41,7 @@ public final class ConfigBuilder {
      * @param existingConfigFile the existing config file on disk
      * @return a new {@link ConfigBuilder}
      */
-    public static ConfigBuilder builder(LocalFileAsset existingConfigFile) {
+    public static ConfigBuilder newBuilder(LocalFileAsset existingConfigFile) {
         return new ConfigBuilder(existingConfigFile);
     }
 
@@ -122,9 +122,9 @@ public final class ConfigBuilder {
     /**
      * @return a new {@link DefaultProjectConfiguration} that has not been populated with value
      */
-    public DefaultProjectConfiguration build() {
-        ConfigurationOptions<CommentedConfig> options = new ConfigurationOptions<>(config, configWriter, configParser);
+    public ProjectConfig build() {
         ConfigurationFileAsset asset = new ConfigurationFileAsset(localFileAsset, jarFileAsset);
-        return new DefaultProjectConfiguration(asset, options, fileNotFoundAction);
+        ConfigurationOptions<ProjectConfig> options = new ConfigurationOptions<>(configWriter, configParser, asset, fileNotFoundAction);
+        return new ProjectConfig(config, options);
     }
 }

@@ -1,11 +1,15 @@
 package net.senmori.project.spigot.config;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.conversion.Conversion;
+import com.electronwill.nightconfig.core.conversion.Path;
+import com.electronwill.nightconfig.core.conversion.SpecValidator;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
+import net.senmori.jfx.ComparableVersionConverter;
 import net.senmori.project.config.DefaultProjectConfiguration;
 import net.senmori.versioning.ComparableVersion;
 
@@ -33,5 +37,17 @@ public class SpigotSettings {
 
     public CommentedConfig getConfig() {
         return projectConfiguration.getConfig();
+    }
+
+    public void setSpigotVersion(@NonNull ComparableVersion version) {
+        this.spigotVersion = version;
+    }
+
+    public void setMavenVersion(@NonNull ComparableVersion version) {
+        this.mavenVersion = version;
+    }
+
+    public void setPortableGitVersion(@NonNull ComparableVersion version) {
+        this.portableGitVersion = version;
     }
 }

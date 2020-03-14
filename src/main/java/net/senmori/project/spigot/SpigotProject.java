@@ -6,7 +6,7 @@ import net.senmori.project.Result;
 import net.senmori.project.asset.assets.JarFileAsset;
 import net.senmori.project.asset.assets.LocalFileAsset;
 import net.senmori.project.config.ConfigBuilder;
-import net.senmori.project.config.DefaultProjectConfiguration;
+import net.senmori.project.config.ProjectConfig;
 import net.senmori.storage.Directory;
 
 public class SpigotProject implements Project {
@@ -14,7 +14,7 @@ public class SpigotProject implements Project {
     private LocalFileAsset configFileAsset;
     private JarFileAsset sourceFileAsset;
     private Directory workingDirectory;
-    private DefaultProjectConfiguration config;
+    private ProjectConfig config;
 
     public SpigotProject() {}
 
@@ -39,7 +39,7 @@ public class SpigotProject implements Project {
         workingDirectory.getFile().mkdirs();
         configFileAsset = LocalFileAsset.of(this, "spigot_settings.toml");
         sourceFileAsset = JarFileAsset.of(this, "spigot_settings.toml");
-        config = ConfigBuilder.builder(configFileAsset)
+        config = ConfigBuilder.newBuilder(configFileAsset)
                               .sourceFile(sourceFileAsset)
                               .copySourceFileOnLoad()
                               .build();
@@ -56,7 +56,7 @@ public class SpigotProject implements Project {
         return Result.SUCCESS;
     }
 
-    public DefaultProjectConfiguration getConfig() {
+    public ProjectConfig getConfig() {
         return config;
     }
 }

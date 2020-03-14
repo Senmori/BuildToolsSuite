@@ -6,7 +6,7 @@ import net.senmori.project.Result;
 import net.senmori.project.asset.assets.JarFileAsset;
 import net.senmori.project.asset.assets.LocalFileAsset;
 import net.senmori.project.config.ConfigBuilder;
-import net.senmori.project.config.DefaultProjectConfiguration;
+import net.senmori.project.config.ProjectConfig;
 import net.senmori.storage.Directory;
 
 public class MinecraftProject implements Project {
@@ -14,9 +14,10 @@ public class MinecraftProject implements Project {
     private LocalFileAsset configFileAsset;
     private JarFileAsset sourceFileAsset;
     private Directory workingDirectory;
-    private DefaultProjectConfiguration config;
+    private ProjectConfig config;
 
-    public MinecraftProject() {}
+    public MinecraftProject() {
+    }
 
     @Override
     public String getName() {
@@ -39,7 +40,7 @@ public class MinecraftProject implements Project {
         workingDirectory.getFile().mkdirs();
         configFileAsset = LocalFileAsset.of(this, "mc_settings.toml");
         sourceFileAsset = JarFileAsset.of(this, "mc_settings.toml");
-        config = ConfigBuilder.builder(configFileAsset)
+        config = ConfigBuilder.newBuilder(configFileAsset)
                               .sourceFile(sourceFileAsset)
                               .copySourceFileOnLoad()
                               .build();
