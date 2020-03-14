@@ -1,6 +1,5 @@
 package net.senmori.project.spigot.config;
 
-import com.electronwill.nightconfig.core.CommentedConfig;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -13,7 +12,7 @@ import net.senmori.versioning.ComparableVersion;
 public class SpigotSettings {
 
     @Getter(AccessLevel.NONE)
-    private final ProjectConfig projectConfiguration;
+    private final ProjectConfig config;
 
     private String spigotVersionsURL = "https://hub.spigotmc.org/versions/";
     private String gitInstallerLink = "https://static.spigotmc.org/git/PortableGit-{0}-{1}-bit.7z.exe";
@@ -28,7 +27,7 @@ public class SpigotSettings {
     private List<String> outputDirectories = new ArrayList<>();
 
     public SpigotSettings(@NonNull ProjectConfig config) {
-        this.projectConfiguration = config;
+        this.config = config;
     }
 
     public void setSpigotVersion(@NonNull ComparableVersion version) {

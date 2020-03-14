@@ -36,7 +36,7 @@ public final class ConfigBuilder {
 
     /**
      * Get a new instance of a {@link ConfigBuilder} to configure
-     * a {@link DefaultProjectConfiguration}
+     * a {@link ProjectConfig}
      *
      * @param existingConfigFile the existing config file on disk
      * @return a new {@link ConfigBuilder}
@@ -62,7 +62,7 @@ public final class ConfigBuilder {
     }
 
     /**
-     * Set the type of {@link CommentedConfig} for the {@link DefaultProjectConfiguration}
+     * Set the type of {@link CommentedConfig} for the {@link ProjectConfig}
      *
      * @param config the type of config
      * @return this
@@ -73,7 +73,7 @@ public final class ConfigBuilder {
     }
 
     /**
-     * Set the type {@link ConfigWriter} for the {@link DefaultProjectConfiguration}
+     * Set the type {@link ConfigWriter} for the {@link ProjectConfig}
      *
      * @param writer the writer to use
      * @return this
@@ -84,7 +84,7 @@ public final class ConfigBuilder {
     }
 
     /**
-     * Set the {@link ConfigParser} for the {@link DefaultProjectConfiguration}
+     * Set the {@link ConfigParser} for the {@link ProjectConfig}
      *
      * @param parser the parser to use
      * @return this
@@ -120,7 +120,7 @@ public final class ConfigBuilder {
     }
 
     /**
-     * @return a new {@link DefaultProjectConfiguration} that has not been populated with value
+     * @return a new {@link ProjectConfig}
      */
     public ProjectConfig build() {
         ConfigurationFileAsset asset = new ConfigurationFileAsset(localFileAsset, jarFileAsset);
