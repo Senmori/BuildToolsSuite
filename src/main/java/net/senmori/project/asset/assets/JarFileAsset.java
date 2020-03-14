@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
-import net.senmori.util.ReflectionUtil;
+import net.senmori.project.Project;
 
 public class JarFileAsset extends FileAsset {
 
@@ -21,37 +21,17 @@ public class JarFileAsset extends FileAsset {
         return classLoaderSupplier.get();
     }
 
-    public static JarFileAsset of(String assetName, Class<?> clazz) {
-        Objects.requireNonNull(assetName, () -> "Cannot create jar file asset with null name");
-        Objects.requireNonNull(clazz, () -> "Cannot create JarFileAsset with null classloader");
-        Supplier<ClassLoader> supplier = clazz::getClassLoader;
-        File assetFile = getFileFromAssetName(assetName, clazz.getClassLoader());
+    public static JarFileAsset of(Project project, String assetName) {
+        Objects.requireNonNull(assetName, () -> "Cannot create jar file asset with null asset name");
+        Objects.requireNonNull(project, () -> "Cannot create JarFileAsset with no project");
+        Supplier<ClassLoader> supplier = project::getProjectClassLoader;
+        File assetFile = getFileFromAssetName(assetName, project.getClass());
         return new JarFileAsset(assetFile, supplier);
     }
 
-    public static JarFileAsset of(String assetName, ClassLoader classLoader) {
-        Objects.requireNonNull(assetName, () -> "Cannot create jar file asset with null name");
-        Objects.requireNonNull(classLoader, () -> "Cannot create JarFileAsset with null classloader");
-        File assetFile = getFileFromAssetName(assetName, classLoader);
-        return new JarFileAsset(assetFile, () -> classLoader);
-    }
-
-    public static JarFileAsset of(String assetName) {
-        Objects.requireNonNull(assetName, () -> "Cannot create JarFileAsset with empty asset name");
-        Class<?> clazz = ReflectionUtil.getCallingClass();
-        File assetFile = getFileFromAssetName(assetName, clazz.getClassLoader());
-        return new JarFileAsset(assetFile, clazz::getClassLoader);
-    }
-
-    public static JarFileAsset of(File file, ClassLoader classLoader) {
-        Objects.requireNonNull(file, () -> "Cannot create JarFileAsset without a source file");
-        Objects.requireNonNull(classLoader, "Cannot create JarFileAsset without a class loader");
-        return new JarFileAsset(file, () -> classLoader);
-    }
-
-    private static File getFileFromAssetName(String assetName, ClassLoader classLoader) {
+    private static File getFileFromAssetName(String assetName, Class<?> clazz) {
         Optional<File> fileOptional = Optional.empty();
-        URL resourceURL = getURLFromResource(assetName, classLoader);
+        URL resourceURL = getURLFromResource(assetName, clazz);
         try {
             File file = new File(resourceURL.toURI());
             fileOptional = Optional.of(file);
@@ -61,8 +41,9 @@ public class JarFileAsset extends FileAsset {
         return fileOptional.orElseThrow(IllegalArgumentException::new);
     }
 
-    private static URL getURLFromResource(String assetName, ClassLoader classLoader) {
-        Optional<URL> resourceURL = Optional.ofNullable(classLoader.getResource(assetName));
-        return resourceURL.orElseThrow(IllegalArgumentException::new);
+    private static URL getURLFromResource(String assetName, Class<?> clazz) {
+        Optional<URL> resourceURL = Optional.ofNullable(clazz.getResource(assetName));
+        Supplier<String> errorMessageSupplier = () -> "Could not find asset with name " + assetName + " using " + clazz.getName() + "'s classloader";
+        return resourceURL.orElseThrow(() -> new IllegalArgumentException(errorMessageSupplier.get()));
     }
 }

@@ -1,10 +1,8 @@
 package net.senmori;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.function.IntFunction;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -16,24 +14,32 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import net.senmori.project.spigot.config.SpigotConfig;
+import net.senmori.project.ApplicationDetails;
+import net.senmori.project.minecraft.MinecraftProject;
+import net.senmori.project.spigot.SpigotProject;
+import net.senmori.storage.Directory;
 
 public class Main extends Application {
-
+    public static final Directory WORKING_DIR = new Directory(System.getProperty("user.dir"), "BTSuite");
     private static Scene scene;
 
     private static AnchorPane rootPane;
+    private static SpigotProject spigotProject;
+    private static MinecraftProject mcProject;
+    private static ApplicationDetails applicationDetails;
+
+    @Override
+    public void init() throws Exception {
+        WORKING_DIR.getFile().mkdirs();
+        applicationDetails = new ApplicationDetails(this);
+        spigotProject = new SpigotProject();
+        spigotProject.initSettings(applicationDetails);
+        mcProject = new MinecraftProject();
+        mcProject.initSettings(applicationDetails);
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
-        File spigotConfigFile = null;
-        try {
-            spigotConfigFile = new File(Main.class.getResource("spigot_settings.toml").toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        SpigotConfig spigotConfig = new SpigotConfig(spigotConfigFile);
-
         rootPane = new AnchorPane();
         rootPane.setPrefSize(600.0D, 565.0D);
         rootPane.setMinWidth(Region.USE_PREF_SIZE);
@@ -62,7 +68,14 @@ public class Main extends Application {
         stage.setMinWidth(scene.getWidth());
         stage.setMinHeight(scene.getHeight());
 
-        Platform.runLater(() -> textArea.setText(spigotConfig.getConfig().toString()));
+
+        File workingDirectory = applicationDetails.getWorkingDirectory().getFile();
+        printToConsole(textArea, workingDirectory.getAbsolutePath());
+        Desktop.getDesktop().open(workingDirectory);
+    }
+
+    private static void printToConsole(TextArea console, String text) {
+        Platform.runLater(() -> console.appendText(text + System.lineSeparator()));
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
