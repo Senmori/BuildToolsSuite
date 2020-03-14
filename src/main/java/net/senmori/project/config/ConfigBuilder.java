@@ -1,7 +1,6 @@
-package net.senmori.project.spigot.config;
+package net.senmori.project.config;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
-import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileNotFoundAction;
 import com.electronwill.nightconfig.core.io.ConfigParser;
 import com.electronwill.nightconfig.core.io.ConfigWriter;
@@ -9,35 +8,45 @@ import com.electronwill.nightconfig.toml.TomlFormat;
 import com.electronwill.nightconfig.toml.TomlParser;
 import com.electronwill.nightconfig.toml.TomlWriter;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Objects;
 import net.senmori.project.asset.assets.ConfigurationFileAsset;
 import net.senmori.project.asset.assets.JarFileAsset;
 import net.senmori.project.asset.assets.LocalFileAsset;
-import net.senmori.project.config.ConfigurationOptions;
+import net.senmori.project.spigot.config.SpigotConfig;
 
-public final class SpigotConfigBuilder {
+/**
+ * The default config builder. <br>
+ * Default settings:<br>
+ * Config: {@link CommentedConfig}<br>
+ * Writer: {@link TomlWriter}<br>
+ * Parser: {@link TomlParser}<br>
+ * FileNotFoundAction: {@link FileNotFoundAction#CREATE_EMPTY}<br>
+ * <br>
+ * The source file ({@link #sourceFile(JarFileAsset)}) is null by default,
+ * users must explicitly set it in order for {@link #copySourceFileOnLoad()}
+ * to work, otherwise it will fail-fast.
+ */
+public final class ConfigBuilder {
 
     private CommentedConfig config = TomlFormat.newConcurrentConfig();
     private ConfigWriter configWriter = new TomlWriter();
     private ConfigParser<CommentedConfig> configParser = new TomlParser();
     private FileNotFoundAction fileNotFoundAction = FileNotFoundAction.CREATE_EMPTY;
-    private LocalFileAsset localFileAsset;
-    private JarFileAsset jarFileAsset;
+    private LocalFileAsset localFileAsset = null;
+    private JarFileAsset jarFileAsset = null;
 
     /**
-     * Get a new instance of a {@link SpigotConfigBuilder} to configure
+     * Get a new instance of a {@link ConfigBuilder} to configure
      * a {@link SpigotConfig}
      *
      * @param existingConfigFile the existing config file on disk
-     * @return a new {@link SpigotConfigBuilder}
+     * @return a new {@link ConfigBuilder}
      */
-    public static SpigotConfigBuilder builder(LocalFileAsset existingConfigFile) {
-        return new SpigotConfigBuilder(existingConfigFile);
+    public static ConfigBuilder builder(LocalFileAsset existingConfigFile) {
+        return new ConfigBuilder(existingConfigFile);
     }
 
-    private SpigotConfigBuilder(LocalFileAsset localFileAsset) {
+    private ConfigBuilder(LocalFileAsset localFileAsset) {
         this.localFileAsset = localFileAsset;
     }
 
@@ -48,7 +57,7 @@ public final class SpigotConfigBuilder {
      * @param asset the {@link JarFileAsset} of the file
      * @return this
      */
-    public SpigotConfigBuilder sourceFile(JarFileAsset asset) {
+    public ConfigBuilder sourceFile(JarFileAsset asset) {
         this.jarFileAsset = asset;
         return this;
     }
@@ -59,7 +68,7 @@ public final class SpigotConfigBuilder {
      * @param config the type of config
      * @return this
      */
-    public SpigotConfigBuilder config(CommentedConfig config) {
+    public ConfigBuilder config(CommentedConfig config) {
         this.config = config;
         return this;
     }
@@ -70,7 +79,7 @@ public final class SpigotConfigBuilder {
      * @param writer the writer to use
      * @return this
      */
-    public SpigotConfigBuilder writer(ConfigWriter writer) {
+    public ConfigBuilder writer(ConfigWriter writer) {
         this.configWriter = writer;
         return this;
     }
@@ -81,7 +90,7 @@ public final class SpigotConfigBuilder {
      * @param parser the parser to use
      * @return this
      */
-    public SpigotConfigBuilder parser(ConfigParser<CommentedConfig> parser) {
+    public ConfigBuilder parser(ConfigParser<CommentedConfig> parser) {
         this.configParser = parser;
         return this;
     }
@@ -93,7 +102,7 @@ public final class SpigotConfigBuilder {
      * @param action the action to use
      * @return this
      */
-    public SpigotConfigBuilder fileNotFoundAction(FileNotFoundAction action) {
+    public ConfigBuilder fileNotFoundAction(FileNotFoundAction action) {
         this.fileNotFoundAction = action;
         return this;
     }
@@ -104,7 +113,7 @@ public final class SpigotConfigBuilder {
      *
      * @return this
      */
-    public SpigotConfigBuilder copySourceFileOnLoad() {
+    public ConfigBuilder copySourceFileOnLoad() {
         Objects.requireNonNull(jarFileAsset, () -> "Cannot copy jar file asset without a jar file");
         File sourceFile = jarFileAsset.getFile();
         this.fileNotFoundAction = FileNotFoundAction.copyData(sourceFile);

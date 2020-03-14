@@ -5,9 +5,6 @@ import com.electronwill.nightconfig.toml.TomlParser;
 import com.electronwill.nightconfig.toml.TomlWriter;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.function.IntFunction;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +19,7 @@ import javafx.stage.Stage;
 import net.senmori.project.asset.assets.JarFileAsset;
 import net.senmori.project.asset.assets.LocalFileAsset;
 import net.senmori.project.spigot.config.SpigotConfig;
-import net.senmori.project.spigot.config.SpigotConfigBuilder;
+import net.senmori.project.config.ConfigBuilder;
 import net.senmori.storage.Directory;
 
 public class Main extends Application {
@@ -31,21 +28,25 @@ public class Main extends Application {
     private static Scene scene;
 
     private static AnchorPane rootPane;
+    private static SpigotConfig config = null;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void init() throws Exception {
         WORKING_DIR.getFile().mkdirs();
         File localFile = SETTINGS_FILE.getFile();
         LocalFileAsset localFileAsset = LocalFileAsset.of(localFile);
         JarFileAsset jarFileAsset = JarFileAsset.of("spigot_settings.toml");
-        SpigotConfig config = SpigotConfigBuilder.builder(localFileAsset)
-                                                 .sourceFile(jarFileAsset)
-                                                 .config(TomlFormat.newConcurrentConfig())
-                                                 .parser(new TomlParser())
-                                                 .writer(new TomlWriter())
-                                                 .copySourceFileOnLoad()
-                                                 .build();
+        config = ConfigBuilder.builder(localFileAsset)
+                              .sourceFile(jarFileAsset)
+                              .config(TomlFormat.newConcurrentConfig())
+                              .parser(new TomlParser())
+                              .writer(new TomlWriter())
+                              .copySourceFileOnLoad()
+                              .build();
+    }
 
+    @Override
+    public void start(Stage stage) throws IOException {
         rootPane = new AnchorPane();
         rootPane.setPrefSize(600.0D, 565.0D);
         rootPane.setMinWidth(Region.USE_PREF_SIZE);
