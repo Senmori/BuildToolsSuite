@@ -1,5 +1,8 @@
 package net.senmori;
 
+import com.electronwill.nightconfig.toml.TomlFormat;
+import com.electronwill.nightconfig.toml.TomlParser;
+import com.electronwill.nightconfig.toml.TomlWriter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,23 +19,32 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import net.senmori.project.asset.assets.JarFileAsset;
+import net.senmori.project.asset.assets.LocalFileAsset;
 import net.senmori.project.spigot.config.SpigotConfig;
+import net.senmori.project.spigot.config.SpigotConfigBuilder;
+import net.senmori.storage.Directory;
 
 public class Main extends Application {
-
+    public static final Directory WORKING_DIR = new Directory(System.getProperty("user.dir"), "BTSuite");
+    public static final Directory SETTINGS_FILE = new Directory(WORKING_DIR, "spigot_settings.toml");
     private static Scene scene;
 
     private static AnchorPane rootPane;
 
     @Override
     public void start(Stage stage) throws IOException {
-        File spigotConfigFile = null;
-        try {
-            spigotConfigFile = new File(Main.class.getResource("spigot_settings.toml").toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        SpigotConfig spigotConfig = new SpigotConfig(spigotConfigFile);
+        WORKING_DIR.getFile().mkdirs();
+        File localFile = SETTINGS_FILE.getFile();
+        LocalFileAsset localFileAsset = LocalFileAsset.of(localFile);
+        JarFileAsset jarFileAsset = JarFileAsset.of("spigot_settings.toml");
+        SpigotConfig config = SpigotConfigBuilder.builder(localFileAsset)
+                                                 .sourceFile(jarFileAsset)
+                                                 .config(TomlFormat.newConcurrentConfig())
+                                                 .parser(new TomlParser())
+                                                 .writer(new TomlWriter())
+                                                 .copySourceFileOnLoad()
+                                                 .build();
 
         rootPane = new AnchorPane();
         rootPane.setPrefSize(600.0D, 565.0D);
@@ -62,7 +74,7 @@ public class Main extends Application {
         stage.setMinWidth(scene.getWidth());
         stage.setMinHeight(scene.getHeight());
 
-        Platform.runLater(() -> textArea.setText(spigotConfig.getConfig().toString()));
+        Platform.runLater(() -> textArea.setText(config.getConfig().toString()));
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
