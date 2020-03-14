@@ -1,6 +1,7 @@
 package net.senmori.project.spigot.config;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileNotFoundAction;
 import com.electronwill.nightconfig.core.io.ConfigParser;
 import com.electronwill.nightconfig.core.io.ConfigWriter;
@@ -10,14 +11,16 @@ import com.electronwill.nightconfig.toml.TomlWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
+import net.senmori.project.asset.assets.ConfigurationFileAsset;
 import net.senmori.project.asset.assets.JarFileAsset;
 import net.senmori.project.asset.assets.LocalFileAsset;
+import net.senmori.project.config.ConfigurationOptions;
 
 public final class SpigotConfigBuilder {
 
     private CommentedConfig config = TomlFormat.newConcurrentConfig();
     private ConfigWriter configWriter = new TomlWriter();
-    private ConfigParser<? super CommentedConfig> configParser = new TomlParser();
+    private ConfigParser<CommentedConfig> configParser = new TomlParser();
     private FileNotFoundAction fileNotFoundAction = FileNotFoundAction.CREATE_EMPTY;
     private LocalFileAsset localFileAsset;
     private JarFileAsset jarFileAsset;
@@ -77,7 +80,7 @@ public final class SpigotConfigBuilder {
      * @param parser the parser to use
      * @return this
      */
-    public SpigotConfigBuilder parser(ConfigParser<? super CommentedConfig> parser) {
+    public SpigotConfigBuilder parser(ConfigParser<CommentedConfig> parser) {
         this.configParser = parser;
         return this;
     }
@@ -115,6 +118,8 @@ public final class SpigotConfigBuilder {
      * @return a new {@link SpigotConfig} that has not been populated with value
      */
     public SpigotConfig build() {
-
+        ConfigurationOptions<CommentedConfig> options = new ConfigurationOptions<>(config, configWriter, configParser);
+        ConfigurationFileAsset asset = new ConfigurationFileAsset(localFileAsset, jarFileAsset);
+        return new SpigotConfig(asset, options, fileNotFoundAction);
     }
 }
